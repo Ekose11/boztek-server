@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Yönetim Paneli</h1>
+<div style="display:flex;gap:12px;flex-wrap:wrap">
+<div style="background:white;padding:20px;border-radius:14px;min-width:160px"><h2>{{ personel }}</h2><p>Toplam Personel</p></div>
+<div style="background:white;padding:20px;border-radius:14px;min-width:160px"><h2>{{ avans }}</h2><p>Avans Kaydı</p></div>
+<div style="background:white;padding:20px;border-radius:14px;min-width:160px"><h2>{{ izin }}</h2><p>İzin Kaydı</p></div>
+</div>
+{% endblock %}

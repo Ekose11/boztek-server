@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Boztek Giriş</title>
+</head>
+<body style="font-family:Arial;background:#eef0f5;padding:30px">
+<div style="max-width:420px;margin:auto;background:white;padding:25px;border-radius:18px;box-shadow:0 8px 20px #0002">
+<h1>Boztek Yönetim</h1>
+<form method="post">
+<input name="username" placeholder="Kullanıcı adı" style="width:100%;padding:12px;margin-bottom:10px;box-sizing:border-box">
+<input name="password" type="password" placeholder="Şifre" style="width:100%;padding:12px;margin-bottom:10px;box-sizing:border-box">
+<button style="width:100%;padding:12px;background:#6b4fb3;color:white;border:0;border-radius:10px;font-weight:bold">Giriş Yap</button>
+</form>
+{% with messages = get_flashed_messages() %}
+{% for m in messages %}<p style="color:red">{{m}}</p>{% endfor %}
+{% endwith %}
+</div>
+</body>
+</html>

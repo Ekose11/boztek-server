@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ title }}</title>
+</head>
+<body style="font-family:Arial;background:#eef0f5;margin:0;color:#1f2937">
+<div style="background:#1f2540;color:white;padding:18px;font-size:24px;font-weight:bold">Boztek Panel</div>
+<div style="padding:20px">
+<p>
+<a href="/admin/dashboard">Dashboard</a> |
+<a href="/admin/personnel">Personel</a> |
+<a href="/admin/advances">Avans</a> |
+<a href="/admin/leaves">İzin</a> |
+<a href="/admin/salary">Maaş</a> |
+<a href="/admin/attendance">Giriş Çıkış</a> |
+<a href="/admin/logout">Çıkış</a>
+</p>
+{% with messages = get_flashed_messages() %}
+{% for m in messages %}<p style="background:#dcfce7;padding:10px;border-radius:8px">{{m}}</p>{% endfor %}
+{% endwith %}
+{% block content %}{% endblock %}
+</div>
+</body>
+</html>

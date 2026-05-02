@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Personel</h1>
+<form method="post" style="background:white;padding:15px;border-radius:14px;margin-bottom:15px">
+<input name="full_name" placeholder="Ad Soyad" required>
+<input name="department" placeholder="Bölüm" required>
+<input name="username" placeholder="Personel kullanıcı adı">
+<input name="password" placeholder="Personel şifre">
+<input name="annual_leave_total" type="number" value="14">
+<input name="salary" type="number" step="0.01" value="0">
+<button>Personel Ekle</button>
+</form>
+<table border="1" cellpadding="8" style="background:white;border-collapse:collapse;width:100%">
+<tr><th>İsim</th><th>Bölüm</th><th>Kullanıcı</th><th>Maaş</th><th>Kalan İzin</th><th>İşlem</th></tr>
+{% for p in rows %}
+<tr>
+<td>{{ p.full_name }}</td>
+<td>{{ p.department }}</td>
+<td>{{ p.username or "-" }}</td>
+<td>{{ p.salary }}</td>
+<td>{{ p.annual_leave_remaining }}</td>
+<td>
+<a href="/admin/personnel/{{ p.id }}/edit">Düzenle</a>
+<form method="post" action="/admin/personnel/{{ p.id }}/delete" style="display:inline">
+<button>Sil</button>
+</form>
+</td>
+</tr>
+{% endfor %}
+</table>
+{% endblock %}
