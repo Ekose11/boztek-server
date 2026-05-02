@@ -1,18 +1,29 @@
-PROFESYONEL PANEL - KURULUM
+Boztek Android Full v1
 
-1) ZIP'i çıkar.
-2) İçindeki dosyaları GitHub repo ana dizinine yükle.
-3) Render ayarları:
-   Build Command: pip install -r requirements.txt
-   Start Command: gunicorn app:app
-   Environment: DATABASE_URL = Neon connection string
+Bu proje Android Studio için hazırlanmıştır.
 
-4) Manual Deploy > Clear build cache & deploy
+Özellikler:
+- kullanıcı adı + şifre ile giriş
+- giriş / çıkış kaydı gönderme
+- bu ay kaç gün giriş yaptığı bilgisi
+- yıllık izinleri görüntüleme
+- toplam onaylı izin günü görüntüleme
+- profesyonel görünüm
 
-5) Test:
-   /api/health
+Uyumlu server:
+- BoztekServer_remote_ready.zip
+- veya BoztekServer_pro_v5.zip
 
-Doğru çıktı:
-{"status":"ok","database":"connected","driver":"pg8000"}
+ÖNEMLİ:
+1) Önce server'ı çalıştır.
+2) app/src/main/java/com/boztek/app/ApiClient.java dosyasını aç.
+3) SERVER_URL satırını kendi bilgisayar IP adresine veya dış erişim adresine göre değiştir.
+   Örnek:
+   public static final String SERVER_URL = "http://192.168.1.117:5000/";
+4) Android Studio ile projeyi aç.
+5) Sync ve Run yap.
 
-Bu sürüm çalışan pg8000 altyapısını korur, paneli profesyonel yapar.
+Örnek kullanıcılar:
+- ali / 1234
+- ayse / 1234
+- mehmet / 1234
