@@ -1,6 +1,8 @@
-{% extends "base.html" %}{% block content %}
-<div class="topbar"><div class="title">Personel Yönetimi</div><div class="subtitle">Personeller Neon database'e kalıcı kaydolur.</div></div>
-{% if error %}<div class="flash err">{{error}}</div>{% endif %}
+from flask import Flask, request, jsonify
+import os
+import pg8000
+
+app = Flask(__name__)
 <div class="card"><form method="post" class="form-grid">
 <div class="field"><label>Ad Soyad</label><input name="full_name" required></div><div class="field"><label>Bölüm</label><input name="department" required></div>
 <div class="field"><label>Kullanıcı Adı</label><input name="username"></div><div class="field"><label>Şifre</label><input name="password"></div>
