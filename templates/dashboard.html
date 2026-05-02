@@ -1,9 +1,13 @@
-{% extends "base.html" %}
-{% block content %}
-<h1>Yönetim Paneli</h1>
-<div style="display:flex;gap:12px;flex-wrap:wrap">
-<div style="background:white;padding:20px;border-radius:14px;min-width:160px"><h2>{{ personel }}</h2><p>Toplam Personel</p></div>
-<div style="background:white;padding:20px;border-radius:14px;min-width:160px"><h2>{{ avans }}</h2><p>Avans Kaydı</p></div>
-<div style="background:white;padding:20px;border-radius:14px;min-width:160px"><h2>{{ izin }}</h2><p>İzin Kaydı</p></div>
+{% extends "base.html" %}{% block content %}
+<div class="topbar"><div class="title">Yönetim Paneli</div><div class="subtitle">Server çalışıyor • Neon kalıcı veritabanı aktif • Telefon uygulamaları ile uyumlu</div></div>
+<div class="stats">
+<div class="stat blue"><div class="n">{{personel}}</div><div class="l">Toplam Personel</div></div>
+<div class="stat green"><div class="n">{{inside}}</div><div class="l">Şu An İçeride</div></div>
+<div class="stat yellow"><div class="n">{{izin}}</div><div class="l">İzin Kaydı</div></div>
+<div class="stat red"><div class="n">{{avans}}</div><div class="l">Avans Kaydı</div></div>
+</div>
+<div class="grid2">
+<div class="card"><h2>Bugün İçeride Olanlar</h2>{% for p in inside_people %}<p><b>{{p.full_name}}</b> - {{p.department}}</p>{% else %}<p class="subtitle">Şu an içeride personel yok.</p>{% endfor %}</div>
+<div class="card"><h2>Hızlı Kontrol</h2><p><span class="badge pill-green">/api/health</span> database connected dönerse veriler silinmez.</p><p><span class="badge">/api/personnel</span> telefon uygulaması buradan personel çeker.</p></div>
 </div>
 {% endblock %}

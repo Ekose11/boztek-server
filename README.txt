@@ -1,20 +1,18 @@
-SIFIRDAN KURULUM
+PROFESYONEL PANEL - KURULUM
 
-1) GitHub'da yeni/temiz repo kullan.
-2) ZIP'i çıkar.
-3) İçindeki dosyaları repo ana dizinine yükle.
-4) Render servisinde:
-   - Root Directory boş
-   - Build Command: pip install -r requirements.txt
-   - Start Command: gunicorn app:app
-   - Environment: DATABASE_URL = Neon connection string
+1) ZIP'i çıkar.
+2) İçindeki dosyaları GitHub repo ana dizinine yükle.
+3) Render ayarları:
+   Build Command: pip install -r requirements.txt
+   Start Command: gunicorn app:app
+   Environment: DATABASE_URL = Neon connection string
 
-5) Manual Deploy > Clear build cache & deploy
+4) Manual Deploy > Clear build cache & deploy
 
-6) Test:
+5) Test:
    /api/health
 
 Doğru çıktı:
 {"status":"ok","database":"connected","driver":"pg8000"}
 
-Bu çıktı gelirse personeller deploy sonrası silinmez.
+Bu sürüm çalışan pg8000 altyapısını korur, paneli profesyonel yapar.
