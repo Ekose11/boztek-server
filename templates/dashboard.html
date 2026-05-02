@@ -1,13 +1,21 @@
-{% extends "base.html" %}{% block content %}
-<div class="topbar"><div class="title">Yönetim Paneli</div><div class="subtitle">Server çalışıyor • Neon kalıcı veritabanı aktif • Telefon uygulamaları ile uyumlu</div></div>
-<div class="stats">
-<div class="stat blue"><div class="n">{{personel}}</div><div class="l">Toplam Personel</div></div>
-<div class="stat green"><div class="n">{{inside}}</div><div class="l">Şu An İçeride</div></div>
-<div class="stat yellow"><div class="n">{{izin}}</div><div class="l">İzin Kaydı</div></div>
-<div class="stat red"><div class="n">{{avans}}</div><div class="l">Avans Kaydı</div></div>
+{% extends "base.html" %}
+{% block content %}
+<div class="hero">
+  <div class="title">Yönetim Paneli</div>
+  <div class="subtitle">Boztek personel, giriş/çıkış, avans, maaş ve izin takip sistemi. Neon kalıcı veritabanı aktif.</div>
 </div>
-<div class="grid2">
-<div class="card"><h2>Bugün İçeride Olanlar</h2>{% for p in inside_people %}<p><b>{{p.full_name}}</b> - {{p.department}}</p>{% else %}<p class="subtitle">Şu an içeride personel yok.</p>{% endfor %}</div>
-<div class="card"><h2>Hızlı Kontrol</h2><p><span class="badge pill-green">/api/health</span> database connected dönerse veriler silinmez.</p><p><span class="badge">/api/personnel</span> telefon uygulaması buradan personel çeker.</p></div>
+
+<div class="stats">
+  <div class="stat blue"><div class="num">{{ stats.personel }}</div><div class="label">Toplam Personel</div></div>
+  <div class="stat green"><div class="num">{{ stats.inside }}</div><div class="label">Şu An İçeride</div></div>
+  <div class="stat orange"><div class="num">{{ stats.izin }}</div><div class="label">İzin Kaydı</div></div>
+  <div class="stat red"><div class="num">{{ stats.avans }}</div><div class="label">Avans Kaydı</div></div>
+</div>
+
+<div class="card">
+  <h2>Sistem Durumu</h2>
+  <p><span class="badge green">Aktif</span> Server dış erişime açık.</p>
+  <p><span class="badge blue">Kalıcı</span> Personeller Neon veritabanında saklanır, deploy sonrası silinmez.</p>
+  <p><span class="badge orange">Not</span> Render ücretsiz planda ilk açılış 30-50 saniye sürebilir.</p>
 </div>
 {% endblock %}

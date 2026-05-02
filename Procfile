@@ -1,1 +1,1 @@
-{% extends "base.html" %}{% block content %}<div class="topbar"><div class="title">{{title}}</div><div class="subtitle">{{subtitle}}</div></div>{% if error %}<div class="flash err">{{error}}</div>{% endif %}{{body|safe}}{% endblock %}
+web: gunicorn --workers 1 --threads 4 --timeout 120 app:app
