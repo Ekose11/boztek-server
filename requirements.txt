@@ -1,3 +1,1 @@
-Flask==3.0.3
-gunicorn==22.0.0
-pg8000==1.31.2
+web: gunicorn --workers 1 --threads 2 --timeout 180 app:app

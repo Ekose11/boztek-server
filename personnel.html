@@ -1,0 +1,6 @@
+<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Boztek</title><link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"></head>
+<body><div class="login"><div class="login-card"><h1>Boztek Yönetim</h1><p class="subtitle">502 Fix Stabil Sürüm</p>
+<form method="post"><input name="username" placeholder="Kullanıcı adı"><input name="password" type="password" placeholder="Şifre"><button class="btn" style="width:100%">Giriş Yap</button></form>
+{% with messages=get_flashed_messages() %}{% for m in messages %}<p style="color:red">{{m}}</p>{% endfor %}{% endwith %}
+<p style="font-size:13px;color:#666">Server açıldıysa bu sayfa database beklemeden görünür.</p>
+</div></div></body></html>

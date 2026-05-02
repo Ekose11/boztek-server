@@ -1,0 +1,5 @@
+{% extends "base.html" %}{% block content %}
+<div class="topbar"><div class="title">Yönetim Paneli</div><div class="subtitle">{{db_status}}</div></div>
+{% if error %}<div class="flash err">{{error}}</div>{% endif %}
+<div class="stats"><div class="stat"><div class="n">{{stats.personel}}</div><div>Toplam Personel</div></div><div class="stat"><div class="n">{{stats.avans}}</div><div>Avans</div></div><div class="stat"><div class="n">{{stats.izin}}</div><div>İzin</div></div></div>
+{% endblock %}
