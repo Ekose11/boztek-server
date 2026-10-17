@@ -45,9 +45,20 @@ def init_db():
 init_db()
 
 STYLE = """
-:root{--navy:#292126;--navy2:#3b2b34;--gold:#e98d9b;--cream:#fff7f5;--ink:#30252b;--muted:#8c7c83;--line:#f0dfe4;--white:#fff}
+:root{--navy:#382832;--navy2:#503744;--gold:#ed9ba8;--cream:#fff6f3;--ink:#30252b;--muted:#927f88;--line:#f1dce2;--white:#fff}
 *{box-sizing:border-box}body{margin:0;background:#fff8f7;color:var(--ink);font:15px/1.5 Inter,system-ui,-apple-system,Segoe UI,sans-serif}
 a{color:inherit;text-decoration:none}.layout{display:flex;min-height:100vh}.sidebar{width:245px;background:var(--navy);color:#e8edf5;padding:26px 18px;flex-shrink:0}.brand{font-size:21px;font-weight:800;letter-spacing:.4px;margin:4px 12px 4px}.brand span{color:var(--gold)}.subbrand{color:#9da9bc;font-size:11px;letter-spacing:2px;margin:0 12px 32px;text-transform:uppercase}.nav a{display:block;padding:12px 14px;border-radius:11px;margin:5px 0;color:#bdc7d7}.nav a:hover,.nav a.active{background:#49343e;color:#fff}.nav a.active{border-left:3px solid var(--gold)}.nav .public{margin-top:24px;color:var(--gold)}.main{flex:1;min-width:0;padding:30px clamp(16px,3vw,42px)}.top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:26px}.eyebrow{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:1.5px}.h1{font-size:28px;font-weight:800;margin:3px 0}.topright{display:flex;gap:10px;align-items:center}.pill{border:1px solid var(--line);border-radius:30px;padding:8px 12px;background:#fff;font-size:13px}.gold{color:#8d6b22}.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px;margin-bottom:24px}.card,.panel{background:#fff;border:1px solid #e8ebf1;border-radius:17px;padding:20px;box-shadow:0 4px 18px #1a294008}.metric-label{font-size:13px;color:var(--muted)}.metric{font-size:28px;font-weight:800;margin:9px 0 2px}.metric-note{font-size:12px;color:var(--muted)}.section-title{display:flex;justify-content:space-between;align-items:center;margin:8px 0 14px;gap:12px}.section-title h2{font-size:17px;margin:0}.panel{margin-bottom:20px;padding:20px}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;white-space:nowrap}th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);padding:12px 10px;border-bottom:1px solid var(--line)}td{padding:14px 10px;border-bottom:1px solid #f0f2f6;font-size:14px}tr:last-child td{border-bottom:0}.btn{display:inline-flex;align-items:center;justify-content:center;background:var(--navy);color:#fff;border:0;border-radius:10px;padding:10px 15px;font-weight:700;cursor:pointer;font-size:13px}.btn.goldbtn{background:var(--gold);color:#211b10}.btn.ghost{background:#f0f2f6;color:#28344a}.btn.danger{background:#fff0ee;color:#a2392c}.btn.small{padding:7px 10px;font-size:12px}.formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}label{font-size:12px;color:#596477;font-weight:700}input,select,textarea{width:100%;padding:11px 12px;border:1px solid #dfe4ec;border-radius:10px;background:#fff;color:var(--ink);font:inherit;outline:none}input:focus,select:focus,textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px #e98d9b22}textarea{min-height:84px;resize:vertical}.actions{display:flex;gap:8px;flex-wrap:wrap}.badge{display:inline-block;border-radius:30px;padding:5px 9px;font-size:11px;font-weight:700;background:#eef2f8;color:#43516a}.badge.ok{background:#e6f6ec;color:#237447}.badge.warn{background:#fff3d9;color:#8a641a}.badge.cancel{background:#fde9e7;color:#a53d32}.flash{padding:12px 15px;background:#fff5db;border:1px solid #f2d68d;border-radius:10px;margin-bottom:14px}.empty{padding:28px;text-align:center;color:var(--muted)}.muted{color:var(--muted)}.progress{height:7px;background:#edf0f4;border-radius:10px;overflow:hidden;margin-top:8px}.progress span{display:block;height:100%;background:var(--gold)}.auth{min-height:100vh;display:grid;place-items:center;background:radial-gradient(circle at 80% 20%,#704b5b,var(--navy) 55%);padding:20px}.authbox{width:min(430px,100%);background:#fff;padding:34px;border-radius:22px;box-shadow:0 20px 80px #0003}.authbox h1{margin:0 0 6px}.publichead{background:var(--navy);color:white;padding:20px clamp(18px,5vw,70px);display:flex;justify-content:space-between;align-items:center}.publicbody{max-width:900px;margin:35px auto;padding:0 18px}.publichero{background:var(--navy);color:white;border-radius:20px;padding:28px;margin-bottom:20px}.publichero h1{margin:0 0 8px;font-size:30px}.publichero p{color:#c7d1df;margin:0}.two{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}.footer{text-align:center;color:var(--muted);font-size:12px;padding:20px}@media(max-width:900px){.sidebar{width:190px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.two{grid-template-columns:1fr}}@media(max-width:650px){.layout{display:block}.sidebar{width:100%;padding:15px}.subbrand{margin-bottom:12px}.nav{display:flex;overflow:auto;gap:4px}.nav a{white-space:nowrap;padding:9px 11px}.nav .public{margin-top:5px}.main{padding:20px 14px}.top{align-items:flex-start}.h1{font-size:23px}.cards{gap:9px}.card{padding:14px}.metric{font-size:22px}.formgrid{grid-template-columns:1fr}.field.full{grid-column:auto}.panel{padding:14px}}
+/* NUR BEAUTY salon theme */
+.sidebar{background:linear-gradient(165deg,#35242f,#503442 70%,#30242b)}
+.brand{letter-spacing:1px}.subbrand{color:#e4cbd2}
+.nav a.active{background:linear-gradient(110deg,#f7c0c6,#ed9ba8);color:#35242f;border-left:0;box-shadow:0 5px 15px #ed9ba833}
+.btn{background:#49313d}.btn.goldbtn{background:linear-gradient(120deg,#f5c0c6,#e98d9b);color:#382832}.card,.panel{border-color:#f2dfe3;box-shadow:0 8px 24px #6e3e4d0a}
+.publichead{background:#382832;border-bottom:3px solid #ed9ba8}.publicbody{max-width:1000px;margin:24px auto 50px}
+.publichero{position:relative;overflow:hidden;min-height:250px;display:flex;flex-direction:column;justify-content:center;background:linear-gradient(90deg,rgba(56,40,50,.96),rgba(56,40,50,.78) 48%,rgba(56,40,50,.1)),url('https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=1600&q=85') center/cover;border-radius:24px;padding:clamp(24px,5vw,48px)}
+.publichero h1{font-size:clamp(30px,5vw,48px);line-height:1.12;max-width:540px}.publichero p{max-width:440px;color:#f5e7eb}.publichero .eyebrow{color:#f6b8c3!important;letter-spacing:2px}
+.booking-layout{display:grid;grid-template-columns:1fr .7fr;gap:18px;align-items:start}.service-visual{min-height:180px;border-radius:18px;background:linear-gradient(0deg,rgba(56,40,50,.88),rgba(56,40,50,.04)),url('https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=1000&q=80') center/cover;color:#fff;padding:20px;display:flex;flex-direction:column;justify-content:end;margin-bottom:14px}.service-visual strong{font-size:20px}.service-chips{display:flex;flex-wrap:wrap;gap:8px}.service-chip{border:1px solid #f1dce2;border-radius:30px;background:#fff;padding:8px 11px;font-size:12px;color:#634553}
+.booking-card{background:#fff;border:1px solid #f1dce2;border-radius:22px;padding:clamp(16px,3vw,26px);box-shadow:0 12px 35px #6e3e4d0d}.booking-card h2{margin:0 0 5px}.booking-intro{margin:0 0 18px;color:#927f88;font-size:13px}.booking-card input,.booking-card select,.booking-card textarea{border-color:#ead8df;background:#fffdfd;padding:13px}.booking-card .btn{width:100%;padding:14px;font-size:15px;border-radius:13px}.secure-note{display:flex;gap:8px;align-items:flex-start;background:#fff6f3;border-radius:12px;padding:12px;color:#785b68;font-size:12px;margin-top:14px}
+@media(max-width:700px){.booking-layout{grid-template-columns:1fr}.publichero{min-height:230px}.publichead{padding:17px 18px}.publichead .gold{font-size:12px}.publicbody{margin-top:15px}.publichero{border-radius:18px}.booking-card{padding:17px}}
 """
 BASE = """
 <!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{{ title }} · Nur Beauty</title><style>""" + STYLE + """</style></head><body><div class="layout"><aside class="sidebar"><div class="brand">NUR BEAUTY<span>.</span></div><div class="subbrand">Salon yönetim sistemi</div><nav class="nav">
@@ -244,25 +255,74 @@ def reports():
     body=render_template_string("""<div class="cards"><div class="card"><div class="metric-label">Toplam tahsilat</div><div class="metric">{{money(total)}}</div><div class="metric-note">Tüm dönem</div></div><div class="card"><div class="metric-label">Açık paket bakiyesi</div><div class="metric">{{money(due)}}</div><div class="metric-note">Paket ödemelerine göre</div></div></div><div class="two"><div class="panel"><h2 style="font-size:16px">Aylık tahsilat</h2><table><thead><tr><th>Ay</th><th>İşlem</th><th>Toplam</th></tr></thead><tbody>{% for m in months %}<tr><td>{{m.month}}</td><td>{{m.count}}</td><td><b>{{money(m.total)}}</b></td></tr>{% else %}<tr><td colspan="3" class="empty">Rapor için ödeme kaydı gerekli.</td></tr>{% endfor %}</tbody></table></div><div class="panel"><h2 style="font-size:16px">Tamamlanan hizmetler</h2><table><thead><tr><th>Hizmet</th><th>Adet</th></tr></thead><tbody>{% for s in services %}<tr><td>{{s.name}}</td><td>{{s.cnt}}</td></tr>{% endfor %}</tbody></table><p class="muted" style="font-size:12px">Tahsilat raporu kaydedilen ödemeleri esas alır; hizmet adedi tamamlanan randevulardan hesaplanır.</p></div></div>""",months=months,services=services,total=total,due=due,money=money)
     return page("Gelir Raporları","Raporlama","reports",body)
 
-@app.route("/book",methods=["GET","POST"])
+@app.route("/book", methods=["GET", "POST"])
 def book():
-    c=db()
-    if request.method=="POST":
-        name=request.form.get("name","").strip(); phone=request.form.get("phone","").strip(); starts=request.form.get("starts_at","")
-        sid=request.form.get("service_id") or None; staff_id=request.form.get("staff_id") or None
-        if name and phone and starts:
-            try:
-                datetime.fromisoformat(starts)
-                cu=c.execute("SELECT * FROM customers WHERE phone=?",(phone,)).fetchone()
-                if not cu:
-                    cur=c.execute("INSERT INTO customers(name,phone,created_at) VALUES(?,?,?)",(name,phone,datetime.now().isoformat(timespec="minutes"))); cid=cur.lastrowid
-                else: cid=cu["id"]
-                c.execute("INSERT INTO appointments(customer_id,service_id,staff_id,starts_at,status,note,public_booking,created_at) VALUES(?,?,?,?,?,?,1,?)",(cid,sid,staff_id,starts,"Bekliyor",request.form.get("note",""),datetime.now().isoformat(timespec="minutes")))
-                c.commit(); return render_template_string("""<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><style>"""+STYLE+"""</style></head><body class="auth"><div class="authbox"><div class="brand" style="color:#292126">NUR BEAUTY<span>.</span></div><h1>Talebiniz alındı ✦</h1><p>Randevu talebiniz salona iletildi. Salon tarafından onaylanması gerekir.</p><a class="btn goldbtn" href="{{url_for('book')}}">Yeni randevu oluştur</a></div></body></html>""")
-            except ValueError: flash("Lütfen geçerli tarih ve saat seçin.")
-    sv=c.execute("SELECT * FROM services WHERE active=1 ORDER BY name").fetchall()
-    staff_rows=c.execute("SELECT * FROM staff WHERE active=1 ORDER BY name").fetchall()
-    return render_template_string("""<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Online Randevu · Nur Beauty</title><style>"""+STYLE+"""</style></head><body><header class="publichead"><div class="brand">NUR BEAUTY<span>.</span></div><span class="gold">Kendinize zaman ayırın</span></header><div class="publicbody"><div class="publichero"><div class="eyebrow" style="color:#f3b0ba">ONLINE RANDEVU</div><h1>Güzelliğiniz için<br>doğru zaman.</h1><p>Size uygun hizmeti ve zamanı seçerek randevu talebinizi oluşturun.</p></div>{% with messages = get_flashed_messages() %}{% for m in messages %}<div class="flash">{{m}}</div>{% endfor %}{% endwith %}<div class="panel"><h2 style="margin-top:0">Randevu talebi oluştur</h2><form method="post" class="formgrid"><div class="field"><label>Ad soyad *</label><input name="name" required></div><div class="field"><label>Telefon *</label><input name="phone" type="tel" required placeholder="05xx xxx xx xx"></div><div class="field"><label>Hizmet *</label><select name="service_id" required><option value="">Hizmet seçin</option>{% for s in sv %}<option value="{{s.id}}">{{s.name}} · {{money(s.price)}}</option>{% endfor %}</select></div><div class="field"><label>Personel tercihi</label><select name="staff_id"><option value="">Fark etmez</option>{% for st in staff_rows %}<option value="{{st.id}}">{{st.name}}</option>{% endfor %}</select></div><div class="field"><label>Tarih ve saat *</label><input type="datetime-local" name="starts_at" required min="{{min_date}}"></div><div class="field"><label>Not (isteğe bağlı)</label><input name="note" placeholder="Tercih ettiğiniz saat vb."></div><div class="field full"><button class="btn goldbtn" style="padding:13px">Randevu talebi gönder →</button></div></form><p class="muted" style="font-size:12px">Randevu talebi, salon onayından sonra kesinleşir.</p></div><div class="footer">NUR BEAUTY · Özenle sizin için</div></div></body></html>""",sv=sv,staff_rows=staff_rows,money=money,min_date=datetime.now().strftime("%Y-%m-%dT%H:%M"))
+    """Public mobile-friendly booking page; requests are saved to the same DB as the admin panel."""
+    c = db()
+    if request.method == "POST":
+        name = request.form.get("name", "").strip()
+        phone = request.form.get("phone", "").strip()
+        starts = request.form.get("starts_at", "").strip()
+        sid = request.form.get("service_id") or None
+        staff_id = request.form.get("staff_id") or None
+        note = request.form.get("note", "").strip()
+        try:
+            start_dt = datetime.fromisoformat(starts)
+            if start_dt <= datetime.now():
+                flash("Lütfen gelecekte bir tarih ve saat seçin.")
+                return redirect(url_for("book"))
+            if not name or not phone or not sid:
+                flash("Ad, telefon ve hizmet alanları zorunludur.")
+                return redirect(url_for("book"))
+            service = c.execute("SELECT * FROM services WHERE id=? AND active=1", (sid,)).fetchone()
+            if not service:
+                flash("Lütfen geçerli bir hizmet seçin.")
+                return redirect(url_for("book"))
+            if staff_id and not c.execute("SELECT id FROM staff WHERE id=? AND active=1", (staff_id,)).fetchone():
+                staff_id = None
+            # Avoid overlapping bookings for the same staff member (or any staff when no preference is selected).
+            from datetime import timedelta
+            end_dt = start_dt + timedelta(minutes=int(service["duration"] or 30))
+            existing = c.execute("""SELECT a.starts_at, COALESCE(s.duration,30) duration, a.staff_id
+                FROM appointments a LEFT JOIN services s ON s.id=a.service_id
+                WHERE a.status!='İptal' AND substr(a.starts_at,1,10)=?""", (start_dt.strftime("%Y-%m-%d"),)).fetchall()
+            for row in existing:
+                try:
+                    old_start = datetime.fromisoformat(row["starts_at"])
+                    old_end = old_start + timedelta(minutes=int(row["duration"] or 30))
+                    same_staff = (not staff_id or not row["staff_id"] or str(row["staff_id"]) == str(staff_id))
+                    if same_staff and start_dt < old_end and end_dt > old_start:
+                        flash("Bu saat için uygunluk görünmüyor. Lütfen başka bir saat seçin.")
+                        return redirect(url_for("book"))
+                except (ValueError, TypeError):
+                    continue
+            cu = c.execute("SELECT * FROM customers WHERE phone=?", (phone,)).fetchone()
+            if not cu:
+                cur = c.execute("INSERT INTO customers(name,phone,created_at) VALUES(?,?,?)", (name, phone, datetime.now().isoformat(timespec="minutes")))
+                cid = cur.lastrowid
+            else:
+                cid = cu["id"]
+                c.execute("UPDATE customers SET name=? WHERE id=?", (name, cid))
+            c.execute("""INSERT INTO appointments(customer_id,service_id,staff_id,starts_at,status,note,public_booking,created_at)
+                VALUES(?,?,?,?,?,?,1,?)""", (cid, sid, staff_id, start_dt.isoformat(timespec="minutes"), "Bekliyor", note, datetime.now().isoformat(timespec="minutes")))
+            c.commit()
+            return render_template_string("""<!doctype html><html lang='tr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'><title>Talep alındı · NUR BEAUTY</title><style>""" + STYLE + """</style></head><body class='auth'><div class='authbox'><div class='brand' style='color:#382832'>NUR BEAUTY<span>.</span></div><div class='eyebrow' style='margin-top:18px'>ONLINE RANDEVU</div><h1>Talebiniz alındı ✨</h1><p>Randevu talebiniz salona iletildi. Salon tarafından onaylandığında kesinleşecektir.</p><p class='muted'><b>{{when}}</b></p><a class='btn goldbtn' style='width:100%' href='{{url_for("book")}}'>Yeni randevu oluştur</a></div></body></html>""", when=start_dt.strftime("%d.%m.%Y · %H:%M"))
+        except ValueError:
+            flash("Lütfen geçerli bir tarih ve saat seçin.")
+            return redirect(url_for("book"))
+    sv = c.execute("SELECT * FROM services WHERE active=1 ORDER BY name").fetchall()
+    staff_rows = c.execute("SELECT * FROM staff WHERE active=1 ORDER BY name").fetchall()
+    return render_template_string("""<!doctype html><html lang='tr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'><meta name='theme-color' content='#382832'><meta name='description' content='NUR BEAUTY online randevu sayfası'><title>Online Randevu · NUR BEAUTY</title><style>""" + STYLE + """</style></head><body>
+<header class='publichead'><div><div class='brand'>NUR BEAUTY<span>.</span></div><div style='font-size:10px;letter-spacing:2px;color:#e4cbd2;margin:2px 0 0 12px'>GÜZELLİK SALONU</div></div><span class='gold'>Kendinize zaman ayırın ✦</span></header>
+<div class='publicbody'><section class='publichero'><div class='eyebrow'>NUR BEAUTY · ONLINE RANDEVU</div><h1>Güzelliğiniz için<br>kendinize zaman ayırın.</h1><p>Hizmetinizi ve size uygun zamanı seçin. Randevu talebinizi telefonunuzdan kolayca gönderin.</p></section>
+{% with messages = get_flashed_messages() %}{% for m in messages %}<div class='flash'>{{m}}</div>{% endfor %}{% endwith %}
+<div class='booking-layout'><section><div class='service-visual'><span style='font-size:11px;letter-spacing:2px'>SİZİN İÇİN ÖZENLE</span><strong>Bakımınız, sizin zamanınız.</strong><span style='font-size:12px'>NUR BEAUTY</span></div><div class='panel'><h3 style='margin:0 0 12px'>Salon hizmetleri</h3><div class='service-chips'>{% for s in sv %}<span class='service-chip'>✦ {{s.name}} · {{money(s.price)}}</span>{% endfor %}</div><p class='muted' style='font-size:12px;margin-bottom:0'>Gönderdiğiniz randevu talebi salon tarafından kontrol edilerek onaylanır.</p></div></section>
+<section class='booking-card'><h2>Randevu oluştur</h2><p class='booking-intro'>Bilgilerinizi girin, size uygun zamanı seçin.</p><form method='post' class='formgrid'><div class='field full'><label>Ad soyad *</label><input name='name' required autocomplete='name' placeholder='Adınız ve soyadınız'></div><div class='field full'><label>Telefon numarası *</label><input name='phone' type='tel' required autocomplete='tel' placeholder='05xx xxx xx xx'></div><div class='field full'><label>Hizmet seçin *</label><select name='service_id' required><option value=''>Hangi hizmeti almak istiyorsunuz?</option>{% for s in sv %}<option value='{{s.id}}'>{{s.name}} · {{money(s.price)}} · {{s.duration}} dk</option>{% endfor %}</select></div><div class='field full'><label>Personel tercihi</label><select name='staff_id'><option value=''>Fark etmez</option>{% for st in staff_rows %}<option value='{{st.id}}'>{{st.name}}</option>{% endfor %}</select></div><div class='field'><label>Tarih *</label><input type='date' id='book-date' required min='{{min_day}}'></div><div class='field'><label>Saat *</label><select name='starts_at' id='book-time' required><option value=''>Önce tarih seçin</option></select></div><div class='field full'><label>Notunuz (isteğe bağlı)</label><textarea name='note' rows='2' placeholder='Varsa belirtmek istediğiniz bir konu...'></textarea></div><div class='field full'><button class='btn goldbtn'>Randevu talebi gönder&nbsp; →</button></div></form><div class='secure-note'><span>✦</span><span>Randevunuz, salon onayı gelene kadar talep durumundadır. Bilgileriniz randevu planlaması için kullanılır.</span></div></section></div><div class='footer'>NUR BEAUTY · Güzelliğiniz için, her zaman yanınızda</div></div>
+<script>
+const dateInput=document.getElementById('book-date'), timeSelect=document.getElementById('book-time');
+function fillTimes(){timeSelect.innerHTML='<option value="">Saat seçin</option>';if(!dateInput.value)return;for(let h=9;h<=19;h++){for(let m of [0,30]){if(h===19&&m===30)continue;const value=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');const dt=new Date(dateInput.value+'T'+value);if(dt.getTime()<=Date.now())continue;const opt=document.createElement('option');opt.value=dateInput.value+'T'+value;opt.textContent=value;timeSelect.appendChild(opt)}}}
+dateInput.addEventListener('change',fillTimes);fillTimes();
+</script></body></html>""", sv=sv, staff_rows=staff_rows, money=money, min_day=date.today().isoformat())
 
 @app.route("/health")
 def health(): return {"status":"ok"}

@@ -36,3 +36,10 @@ Ardından `http://127.0.0.1:5000` adresini açın.
 **Güvenlik:** Bu proje başlangıç/demo paketidir. Gerçek müşteri verileriyle kullanmadan önce varsayılan şifreyi değiştirin, parola değiştirme ekranı ve CSRF koruması ekleyin, `SECRET_KEY` değerini güvenli bir ortam değişkeni olarak ayarlayın ve veri yedekleme/kalıcılığını doğrulayın. SQLite ve tek yönetici hesabı mevcut haliyle yüksek trafikli veya çok salonlu ticari kullanım için yeterli değildir. Render kalıcı disk planı ücretli olabilir.
 
 `logo.svg`, NUR BEAUTY için düzenlenebilir vektör logo taslağıdır.
+
+
+## Online randevu sayfası
+
+Yayınlandıktan sonra müşterilerin kullanacağı mobil uyumlu sayfa: `/book`. Yönetim panelindeki “Online randevu sayfası” bağlantısı da aynı sayfayı açar. Web formundan gönderilen talepler aynı veritabanındaki randevu listesine ve müşteri kayıtlarına kaydedilir; yönetici panelinden takip edilir. Randevular ilk aşamada **Bekliyor** durumunda kaydedilir ve salon onayı gerektirir.
+
+Not: Bu proje başlangıç sürümüdür. Canlı kullanımdan önce varsayılan yönetici şifresini değiştirmek, güvenlik kontrollerini ve gerçek sunucu üzerinde randevu çakışması testlerini yapmak gerekir.

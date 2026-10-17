@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: atelier-kuafor-panel
+    name: nur-beauty-panel
     runtime: python
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn app:app
