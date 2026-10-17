@@ -43,3 +43,9 @@ Ardından `http://127.0.0.1:5000` adresini açın.
 Yayınlandıktan sonra müşterilerin kullanacağı mobil uyumlu sayfa: `/book`. Yönetim panelindeki “Online randevu sayfası” bağlantısı da aynı sayfayı açar. Web formundan gönderilen talepler aynı veritabanındaki randevu listesine ve müşteri kayıtlarına kaydedilir; yönetici panelinden takip edilir. Randevular ilk aşamada **Bekliyor** durumunda kaydedilir ve salon onayı gerektirir.
 
 Not: Bu proje başlangıç sürümüdür. Canlı kullanımdan önce varsayılan yönetici şifresini değiştirmek, güvenlik kontrollerini ve gerçek sunucu üzerinde randevu çakışması testlerini yapmak gerekir.
+
+## Bildirimler
+- Yönetim paneli açıkken, yeni online randevu talepleri için tarayıcı bildirimi kontrol edilir (20 saniyede bir). İlk kullanımda tarayıcı bildirim izni verilmelidir.
+- Müşteri “Randevularım” sayfası açıkken randevu durumu değişiklikleri kontrol edilir ve onay/iptal durumunda tarayıcı bildirimi gösterilebilir.
+- Bu uygulama içi tarayıcı bildirimleri sayfa açıkken çalışır. Telefon ekranı kapalıyken veya tarayıcı tamamen kapalıyken gerçek push bildirimi için ayrıca Web Push/VAPID kurulumu ve HTTPS gerekir; SMS bildirimi için SMS sağlayıcısı entegrasyonu gerekir.
+- Yönetici, Randevular bölümünden online talepleri “Onayla” ile onaylayabilir.

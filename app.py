@@ -26,6 +26,7 @@ def init_db():
     conn.execute("PRAGMA foreign_keys = ON")
     conn.executescript("""
     CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY, username TEXT UNIQUE NOT NULL, password_hash TEXT NOT NULL);
+    CREATE TABLE IF NOT EXISTS customer_accounts(id INTEGER PRIMARY KEY, customer_id INTEGER UNIQUE NOT NULL REFERENCES customers(id), username TEXT UNIQUE NOT NULL, password_hash TEXT NOT NULL, created_at TEXT NOT NULL);
     CREATE TABLE IF NOT EXISTS services(id INTEGER PRIMARY KEY, name TEXT NOT NULL, price REAL NOT NULL DEFAULT 0, duration INTEGER NOT NULL DEFAULT 30, sessions INTEGER NOT NULL DEFAULT 1, active INTEGER NOT NULL DEFAULT 1);
     CREATE TABLE IF NOT EXISTS staff(id INTEGER PRIMARY KEY, name TEXT NOT NULL, active INTEGER NOT NULL DEFAULT 1);
     CREATE TABLE IF NOT EXISTS customers(id INTEGER PRIMARY KEY, name TEXT NOT NULL, phone TEXT NOT NULL, notes TEXT DEFAULT '', created_at TEXT NOT NULL);
@@ -73,7 +74,22 @@ BASE = """
 <a href="{{url_for('logout')}}">⇥ &nbsp; Çıkış yap</a>
 </nav></aside><main class="main"><header class="top"><div><div class="eyebrow">Salon yönetimi / {{ section }}</div><div class="h1">{{ title }}</div></div><div class="topright"><span class="pill">✦ <span class="gold">Premium</span></span><span class="pill">{{ session.get('username','Salon') }}</span></div></header>
 {% with messages = get_flashed_messages() %}{% for m in messages %}<div class="flash">{{m}}</div>{% endfor %}{% endwith %}
-{{ body|safe }}<div class="footer">NUR BEAUTY · Randevu ve müşteri deneyimi</div></main></div></body></html>
+{{ body|safe }}<div class="footer">NUR BEAUTY · Randevu ve müşteri deneyimi</div></main></div>
+<script>
+// Admin browser notifications while the management panel is open.
+(async function(){
+ if (!location.pathname.startsWith('/login') && !location.pathname.startsWith('/customer/')) {
+   let seen = new Set(JSON.parse(sessionStorage.getItem('nurSeenBookings') || '[]'));
+   async function checkAdmin(){ try {
+     const r=await fetch('/api/admin/new-bookings'); if(!r.ok)return; const items=await r.json();
+     for(const a of items){ if(!seen.has(a.id)){ seen.add(a.id); if('Notification' in window){ if(Notification.permission==='granted') new Notification('NUR BEAUTY · Yeni randevu talebi',{body:a.customer+' · '+a.service+' · '+a.starts_at.replace('T',' ')}); else if(Notification.permission==='default') Notification.requestPermission(); } }
+     }
+     sessionStorage.setItem('nurSeenBookings',JSON.stringify([...seen].slice(-100)));
+   }catch(e){} }
+   checkAdmin(); setInterval(checkAdmin,20000);
+ }
+})();
+</script></body></html>
 """
 def page(title, section, page_name, body):
     return render_template_string(BASE, title=title, section=section, page=page_name, body=body)
@@ -188,7 +204,7 @@ def appointments():
     packs=c.execute("SELECT p.*,cu.name customer FROM packages p JOIN customers cu ON cu.id=p.customer_id WHERE p.used_sessions<p.total_sessions").fetchall()
     body=render_template_string("""
     <div class="two"><div class="panel"><h2 style="font-size:16px">Randevu oluştur</h2><form method="post" class="formgrid"><div class="field full"><label>Kayıtlı müşteri</label><select name="customer_id"><option value="">Yeni müşteri ekle veya seç</option>{% for cu in cust %}<option value="{{cu.id}}">{{cu.name}} · {{cu.phone}}</option>{% endfor %}</select></div><div class="field"><label>Yeni müşteri adı</label><input name="new_name" placeholder="Ad soyad"></div><div class="field"><label>Yeni müşteri telefonu</label><input name="new_phone" type="tel" placeholder="05xx..."></div><div class="field full"><label>Tarih ve saat *</label><input type="datetime-local" name="starts_at" required></div><div class="field"><label>Hizmet</label><select name="service_id"><option value="">Seçiniz</option>{% for s in sv %}<option value="{{s.id}}">{{s.name}} · {{money(s.price)}}</option>{% endfor %}</select></div><div class="field"><label>Personel</label><select name="staff_id"><option value="">Atanmamış</option>{% for st in staff_rows %}<option value="{{st.id}}">{{st.name}}</option>{% endfor %}</select></div><div class="field full"><label>Paket / seans (isteğe bağlı)</label><select name="package_id"><option value="">Paket seçilmedi</option>{% for p in packs %}<option value="{{p.id}}">{{p.customer}} · {{p.title}} ({{p.total_sessions-p.used_sessions}} seans kaldı)</option>{% endfor %}</select></div><div class="field full"><label>Not</label><input name="note" placeholder="İsteğe bağlı"></div><div class="field full"><button class="btn goldbtn">Randevuyu kaydet</button></div></form></div>
-    <div class="panel"><div class="section-title"><h2>Randevu listesi</h2><span class="badge">{{rows|length}} kayıt</span></div><div class="table-wrap"><table><thead><tr><th>Tarih / Saat</th><th>Müşteri</th><th>Hizmet / Personel</th><th>Durum</th><th>İşlem</th></tr></thead><tbody>{% for a in rows %}<tr><td>{{a.starts_at.replace('T',' ')}}</td><td><b>{{a.customer}}</b><div class="muted">{{a.phone}}</div></td><td>{{a.service or '—'}}<div class="muted">{{a.staff or '—'}}</div></td><td><span class="badge {{'ok' if a.status=='Tamamlandı' else 'cancel' if a.status=='İptal' else 'warn'}}">{{a.status}}</span></td><td><div class="actions"><form method="post" action="{{url_for('appointment_status',aid=a.id)}}"><input type="hidden" name="status" value="Tamamlandı"><button class="btn small">Tamamla</button></form><form method="post" action="{{url_for('appointment_status',aid=a.id)}}"><input type="hidden" name="status" value="İptal"><button class="btn small danger">İptal</button></form></div></td></tr>{% else %}<tr><td colspan="5" class="empty">Henüz randevu yok.</td></tr>{% endfor %}</tbody></table></div></div></div>
+    <div class="panel"><div class="section-title"><h2>Randevu listesi</h2><span class="badge">{{rows|length}} kayıt</span></div><div class="table-wrap"><table><thead><tr><th>Tarih / Saat</th><th>Müşteri</th><th>Hizmet / Personel</th><th>Durum</th><th>İşlem</th></tr></thead><tbody>{% for a in rows %}<tr><td>{{a.starts_at.replace('T',' ')}}</td><td><b>{{a.customer}}</b><div class="muted">{{a.phone}}</div></td><td>{{a.service or '—'}}<div class="muted">{{a.staff or '—'}}</div></td><td><span class="badge {{'ok' if a.status=='Tamamlandı' else 'cancel' if a.status=='İptal' else 'warn'}}">{{a.status}}</span></td><td><div class="actions"><form method="post" action="{{url_for('appointment_status',aid=a.id)}}"><input type="hidden" name="status" value="Onaylandı"><button class="btn small">Onayla</button></form><form method="post" action="{{url_for('appointment_status',aid=a.id)}}"><input type="hidden" name="status" value="Tamamlandı"><button class="btn small">Tamamla</button></form><form method="post" action="{{url_for('appointment_status',aid=a.id)}}"><input type="hidden" name="status" value="İptal"><button class="btn small danger">İptal</button></form></div></td></tr>{% else %}<tr><td colspan="5" class="empty">Henüz randevu yok.</td></tr>{% endfor %}</tbody></table></div></div></div>
     """,rows=rows,cust=cust,sv=sv,staff_rows=staff_rows,packs=packs,money=money)
     return page("Randevular","Takvim ve planlama","appointments",body)
 
@@ -196,7 +212,7 @@ def appointments():
 @login_required
 def appointment_status(aid):
     status=request.form.get("status")
-    if status not in ("Tamamlandı","İptal","Bekliyor"): return redirect(url_for("appointments"))
+    if status not in ("Tamamlandı","İptal","Bekliyor","Onaylandı"): return redirect(url_for("appointments"))
     c=db(); old=c.execute("SELECT * FROM appointments WHERE id=?",(aid,)).fetchone()
     if old:
         if status=="Tamamlandı" and old["status"]!="Tamamlandı" and old["package_id"]:
@@ -255,13 +271,73 @@ def reports():
     body=render_template_string("""<div class="cards"><div class="card"><div class="metric-label">Toplam tahsilat</div><div class="metric">{{money(total)}}</div><div class="metric-note">Tüm dönem</div></div><div class="card"><div class="metric-label">Açık paket bakiyesi</div><div class="metric">{{money(due)}}</div><div class="metric-note">Paket ödemelerine göre</div></div></div><div class="two"><div class="panel"><h2 style="font-size:16px">Aylık tahsilat</h2><table><thead><tr><th>Ay</th><th>İşlem</th><th>Toplam</th></tr></thead><tbody>{% for m in months %}<tr><td>{{m.month}}</td><td>{{m.count}}</td><td><b>{{money(m.total)}}</b></td></tr>{% else %}<tr><td colspan="3" class="empty">Rapor için ödeme kaydı gerekli.</td></tr>{% endfor %}</tbody></table></div><div class="panel"><h2 style="font-size:16px">Tamamlanan hizmetler</h2><table><thead><tr><th>Hizmet</th><th>Adet</th></tr></thead><tbody>{% for s in services %}<tr><td>{{s.name}}</td><td>{{s.cnt}}</td></tr>{% endfor %}</tbody></table><p class="muted" style="font-size:12px">Tahsilat raporu kaydedilen ödemeleri esas alır; hizmet adedi tamamlanan randevulardan hesaplanır.</p></div></div>""",months=months,services=services,total=total,due=due,money=money)
     return page("Gelir Raporları","Raporlama","reports",body)
 
-@app.route("/book", methods=["GET", "POST"])
-def book():
-    """Public mobile-friendly booking page; requests are saved to the same DB as the admin panel."""
+@app.route("/customer/register", methods=["GET", "POST"])
+def customer_register():
     c = db()
     if request.method == "POST":
         name = request.form.get("name", "").strip()
         phone = request.form.get("phone", "").strip()
+        username = request.form.get("username", "").strip()
+        password = request.form.get("password", "")
+        confirm = request.form.get("confirm", "")
+        if not name or not phone or not username or len(password) < 8:
+            flash("Tüm alanları doldurun. Şifre en az 8 karakter olmalı.")
+        elif password != confirm:
+            flash("Şifreler eşleşmiyor.")
+        elif c.execute("SELECT id FROM customer_accounts WHERE username=?", (username,)).fetchone():
+            flash("Bu kullanıcı adı kullanılıyor. Başka bir kullanıcı adı seçin.")
+        else:
+            now = datetime.now().isoformat(timespec="minutes")
+            try:
+                cur = c.execute("INSERT INTO customers(name,phone,created_at) VALUES(?,?,?)", (name, phone, now))
+                cid = cur.lastrowid
+                c.execute("INSERT INTO customer_accounts(customer_id,username,password_hash,created_at) VALUES(?,?,?,?)", (cid, username, generate_password_hash(password), now))
+                c.commit()
+                session.clear(); session["customer_id"] = cid; session["customer_username"] = username
+                flash("Hesabınız oluşturuldu. Artık randevu alabilirsiniz.")
+                return redirect(url_for("book"))
+            except sqlite3.IntegrityError:
+                c.rollback(); flash("Kayıt tamamlanamadı. Kullanıcı adınızı kontrol edin.")
+    return render_template_string("""<!doctype html><html lang='tr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'><title>Üye Ol · NUR BEAUTY</title><style>"""+STYLE+"""</style></head><body class='auth'><form class='authbox' method='post'><div class='brand' style='color:#382832'>NUR BEAUTY<span>.</span></div><p class='eyebrow' style='margin-top:18px'>MÜŞTERİ HESABI</p><h1>Aramıza hoş geldiniz</h1><p class='muted'>Hesabınızı oluşturun, randevularınızı tek yerden takip edin.</p>{% with messages=get_flashed_messages() %}{% for m in messages %}<div class='flash'>{{m}}</div>{% endfor %}{% endwith %}<div class='field' style='margin:14px 0'><label>Ad soyad</label><input name='name' required autocomplete='name'></div><div class='field' style='margin:14px 0'><label>Telefon</label><input name='phone' type='tel' required autocomplete='tel' placeholder='05xx xxx xx xx'></div><div class='field' style='margin:14px 0'><label>Kullanıcı adı</label><input name='username' required minlength='3' autocomplete='username'></div><div class='field' style='margin:14px 0'><label>Şifre (en az 8 karakter)</label><input name='password' type='password' required minlength='8' autocomplete='new-password'></div><div class='field' style='margin:14px 0'><label>Şifreyi tekrar girin</label><input name='confirm' type='password' required minlength='8' autocomplete='new-password'></div><button class='btn goldbtn' style='width:100%;padding:13px'>Hesap oluştur</button><p class='muted' style='margin-top:18px'>Zaten hesabınız var mı? <a href='{{url_for("customer_login")}}'><b>Giriş yap</b></a></p></form></body></html>""")
+
+@app.route("/customer/login", methods=["GET", "POST"])
+def customer_login():
+    if request.method == "POST":
+        username = request.form.get("username", "").strip()
+        account = db().execute("SELECT * FROM customer_accounts WHERE username=?", (username,)).fetchone()
+        if account and check_password_hash(account["password_hash"], request.form.get("password", "")):
+            session.clear(); session["customer_id"] = account["customer_id"]; session["customer_username"] = account["username"]
+            return redirect(url_for("book"))
+        flash("Kullanıcı adı veya şifre hatalı.")
+    return render_template_string("""<!doctype html><html lang='tr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'><title>Müşteri Girişi · NUR BEAUTY</title><style>"""+STYLE+"""</style></head><body class='auth'><form class='authbox' method='post'><div class='brand' style='color:#382832'>NUR BEAUTY<span>.</span></div><p class='eyebrow' style='margin-top:18px'>MÜŞTERİ GİRİŞİ</p><h1>Tekrar hoş geldiniz</h1><p class='muted'>Randevu almak ve randevularınızı görüntülemek için giriş yapın.</p>{% with messages=get_flashed_messages() %}{% for m in messages %}<div class='flash'>{{m}}</div>{% endfor %}{% endwith %}<div class='field' style='margin:18px 0'><label>Kullanıcı adı</label><input name='username' required autocomplete='username'></div><div class='field' style='margin-bottom:18px'><label>Şifre</label><input name='password' type='password' required autocomplete='current-password'></div><button class='btn goldbtn' style='width:100%;padding:13px'>Giriş yap</button><p class='muted' style='margin-top:18px'>Hesabınız yok mu? <a href='{{url_for("customer_register")}}'><b>Üye olun</b></a></p></form></body></html>""")
+
+@app.route("/customer/logout")
+def customer_logout():
+    session.pop("customer_id", None); session.pop("customer_username", None)
+    return redirect(url_for("customer_login"))
+
+@app.route("/customer/appointments")
+def customer_appointments():
+    if not session.get("customer_id"): return redirect(url_for("customer_login"))
+    rows = db().execute("SELECT a.*,s.name service FROM appointments a LEFT JOIN services s ON s.id=a.service_id WHERE a.customer_id=? ORDER BY a.starts_at DESC", (session["customer_id"],)).fetchall()
+    return render_template_string("""<!doctype html><html lang='tr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'><title>Randevularım · NUR BEAUTY</title><style>"""+STYLE+"""</style></head><body><header class='publichead'><div class='brand'>NUR BEAUTY<span>.</span></div><a class='btn goldbtn' href='{{url_for("book")}}'>+ Randevu al</a></header><main class='publicbody'><div class='publichero'><div class='eyebrow'>MÜŞTERİ PANELİ</div><h1>Randevularım</h1><p>Merhaba {{username}}, randevu geçmişinizi buradan takip edebilirsiniz.</p></div><div class='panel table-wrap'><table><thead><tr><th>Tarih</th><th>Hizmet</th><th>Durum</th></tr></thead><tbody>{% for a in rows %}<tr><td>{{a.starts_at.replace('T',' ')}}</td><td>{{a.service or '—'}}</td><td><span class='badge {{'ok' if a.status=='Tamamlandı' else 'cancel' if a.status=='İptal' else 'warn'}}'>{{a.status}}</span></td></tr>{% else %}<tr><td colspan='3' class='empty'>Henüz randevunuz yok.</td></tr>{% endfor %}</tbody></table></div><p><a href='{{url_for("customer_logout")}}'>Çıkış yap</a></p></main><script>
+(async function(){ if(!('Notification' in window))return; let first=true, known={}; async function poll(){try{const r=await fetch('/api/customer/appointment-updates');if(!r.ok)return;const rows=await r.json();if(first){rows.forEach(a=>known[a.id]=a.status);first=false;return;}rows.forEach(a=>{if(known[a.id] && known[a.id]!==a.status && (a.status==='Onaylandı'||a.status==='İptal')){if(Notification.permission==='granted')new Notification('NUR BEAUTY · Randevu güncellemesi',{body:a.service+' · '+a.starts_at.replace('T',' ')+' — '+a.status});}known[a.id]=a.status;});}catch(e){}} poll();setInterval(poll,20000);document.addEventListener('click',()=>{if(Notification.permission==='default')Notification.requestPermission();},{once:true});})();
+</script></body></html>""", rows=rows, username=session.get("customer_username", "Müşterimiz"))
+
+@app.route("/book", methods=["GET", "POST"])
+def book():
+    """Public mobile-friendly booking page; requests are saved to the same DB as the admin panel."""
+    if not session.get("customer_id"):
+        flash("Randevu almak için müşteri hesabınızla giriş yapın veya üye olun.")
+        return redirect(url_for("customer_login"))
+    c = db()
+    account_customer = c.execute("SELECT * FROM customers WHERE id=?", (session["customer_id"],)).fetchone()
+    if not account_customer:
+        session.pop("customer_id", None); session.pop("customer_username", None)
+        return redirect(url_for("customer_login"))
+    if request.method == "POST":
+        name = account_customer["name"]
+        phone = account_customer["phone"]
         starts = request.form.get("starts_at", "").strip()
         sid = request.form.get("service_id") or None
         staff_id = request.form.get("staff_id") or None
@@ -271,8 +347,8 @@ def book():
             if start_dt <= datetime.now():
                 flash("Lütfen gelecekte bir tarih ve saat seçin.")
                 return redirect(url_for("book"))
-            if not name or not phone or not sid:
-                flash("Ad, telefon ve hizmet alanları zorunludur.")
+            if not sid:
+                flash("Lütfen bir hizmet seçin.")
                 return redirect(url_for("book"))
             service = c.execute("SELECT * FROM services WHERE id=? AND active=1", (sid,)).fetchone()
             if not service:
@@ -296,13 +372,7 @@ def book():
                         return redirect(url_for("book"))
                 except (ValueError, TypeError):
                     continue
-            cu = c.execute("SELECT * FROM customers WHERE phone=?", (phone,)).fetchone()
-            if not cu:
-                cur = c.execute("INSERT INTO customers(name,phone,created_at) VALUES(?,?,?)", (name, phone, datetime.now().isoformat(timespec="minutes")))
-                cid = cur.lastrowid
-            else:
-                cid = cu["id"]
-                c.execute("UPDATE customers SET name=? WHERE id=?", (name, cid))
+            cid = account_customer["id"]
             c.execute("""INSERT INTO appointments(customer_id,service_id,staff_id,starts_at,status,note,public_booking,created_at)
                 VALUES(?,?,?,?,?,?,1,?)""", (cid, sid, staff_id, start_dt.isoformat(timespec="minutes"), "Bekliyor", note, datetime.now().isoformat(timespec="minutes")))
             c.commit()
@@ -314,15 +384,37 @@ def book():
     staff_rows = c.execute("SELECT * FROM staff WHERE active=1 ORDER BY name").fetchall()
     return render_template_string("""<!doctype html><html lang='tr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'><meta name='theme-color' content='#382832'><meta name='description' content='NUR BEAUTY online randevu sayfası'><title>Online Randevu · NUR BEAUTY</title><style>""" + STYLE + """</style></head><body>
 <header class='publichead'><div><div class='brand'>NUR BEAUTY<span>.</span></div><div style='font-size:10px;letter-spacing:2px;color:#e4cbd2;margin:2px 0 0 12px'>GÜZELLİK SALONU</div></div><span class='gold'>Kendinize zaman ayırın ✦</span></header>
-<div class='publicbody'><section class='publichero'><div class='eyebrow'>NUR BEAUTY · ONLINE RANDEVU</div><h1>Güzelliğiniz için<br>kendinize zaman ayırın.</h1><p>Hizmetinizi ve size uygun zamanı seçin. Randevu talebinizi telefonunuzdan kolayca gönderin.</p></section>
+<div class='publicbody'><div class='actions' style='justify-content:flex-end;margin-bottom:12px'><a class='btn ghost' href='{{url_for("customer_appointments")}}'>Randevularım</a><a class='btn ghost' href='{{url_for("customer_logout")}}'>Çıkış yap</a></div><section class='publichero'><div class='eyebrow'>NUR BEAUTY · ONLINE RANDEVU</div><h1>Güzelliğiniz için<br>kendinize zaman ayırın.</h1><p>Hizmetinizi ve size uygun zamanı seçin. Randevu talebinizi telefonunuzdan kolayca gönderin.</p></section>
 {% with messages = get_flashed_messages() %}{% for m in messages %}<div class='flash'>{{m}}</div>{% endfor %}{% endwith %}
 <div class='booking-layout'><section><div class='service-visual'><span style='font-size:11px;letter-spacing:2px'>SİZİN İÇİN ÖZENLE</span><strong>Bakımınız, sizin zamanınız.</strong><span style='font-size:12px'>NUR BEAUTY</span></div><div class='panel'><h3 style='margin:0 0 12px'>Salon hizmetleri</h3><div class='service-chips'>{% for s in sv %}<span class='service-chip'>✦ {{s.name}} · {{money(s.price)}}</span>{% endfor %}</div><p class='muted' style='font-size:12px;margin-bottom:0'>Gönderdiğiniz randevu talebi salon tarafından kontrol edilerek onaylanır.</p></div></section>
-<section class='booking-card'><h2>Randevu oluştur</h2><p class='booking-intro'>Bilgilerinizi girin, size uygun zamanı seçin.</p><form method='post' class='formgrid'><div class='field full'><label>Ad soyad *</label><input name='name' required autocomplete='name' placeholder='Adınız ve soyadınız'></div><div class='field full'><label>Telefon numarası *</label><input name='phone' type='tel' required autocomplete='tel' placeholder='05xx xxx xx xx'></div><div class='field full'><label>Hizmet seçin *</label><select name='service_id' required><option value=''>Hangi hizmeti almak istiyorsunuz?</option>{% for s in sv %}<option value='{{s.id}}'>{{s.name}} · {{money(s.price)}} · {{s.duration}} dk</option>{% endfor %}</select></div><div class='field full'><label>Personel tercihi</label><select name='staff_id'><option value=''>Fark etmez</option>{% for st in staff_rows %}<option value='{{st.id}}'>{{st.name}}</option>{% endfor %}</select></div><div class='field'><label>Tarih *</label><input type='date' id='book-date' required min='{{min_day}}'></div><div class='field'><label>Saat *</label><select name='starts_at' id='book-time' required><option value=''>Önce tarih seçin</option></select></div><div class='field full'><label>Notunuz (isteğe bağlı)</label><textarea name='note' rows='2' placeholder='Varsa belirtmek istediğiniz bir konu...'></textarea></div><div class='field full'><button class='btn goldbtn'>Randevu talebi gönder&nbsp; →</button></div></form><div class='secure-note'><span>✦</span><span>Randevunuz, salon onayı gelene kadar talep durumundadır. Bilgileriniz randevu planlaması için kullanılır.</span></div></section></div><div class='footer'>NUR BEAUTY · Güzelliğiniz için, her zaman yanınızda</div></div>
+<section class='booking-card'><h2>Randevu oluştur</h2><p class='booking-intro'>Bilgilerinizi girin, size uygun zamanı seçin.</p><form method='post' class='formgrid'><div class='field full'><label>Randevu sahibi</label><div class='pill'>{{customer.name}} · {{customer.phone}}</div><p class='muted' style='font-size:12px;margin:0'>Bilgilerinizi değiştirmek için salonla iletişime geçin.</p></div><div class='field full'><label>Hizmet seçin *</label><select name='service_id' required><option value=''>Hangi hizmeti almak istiyorsunuz?</option>{% for s in sv %}<option value='{{s.id}}'>{{s.name}} · {{money(s.price)}} · {{s.duration}} dk</option>{% endfor %}</select></div><div class='field full'><label>Personel tercihi</label><select name='staff_id'><option value=''>Fark etmez</option>{% for st in staff_rows %}<option value='{{st.id}}'>{{st.name}}</option>{% endfor %}</select></div><div class='field'><label>Tarih *</label><input type='date' id='book-date' required min='{{min_day}}'></div><div class='field'><label>Saat *</label><select name='starts_at' id='book-time' required><option value=''>Önce tarih seçin</option></select></div><div class='field full'><label>Notunuz (isteğe bağlı)</label><textarea name='note' rows='2' placeholder='Varsa belirtmek istediğiniz bir konu...'></textarea></div><div class='field full'><button class='btn goldbtn'>Randevu talebi gönder&nbsp; →</button></div></form><div class='secure-note'><span>✦</span><span>Randevunuz, salon onayı gelene kadar talep durumundadır. Bilgileriniz randevu planlaması için kullanılır.</span></div></section></div><div class='footer'>NUR BEAUTY · Güzelliğiniz için, her zaman yanınızda</div></div>
 <script>
 const dateInput=document.getElementById('book-date'), timeSelect=document.getElementById('book-time');
 function fillTimes(){timeSelect.innerHTML='<option value="">Saat seçin</option>';if(!dateInput.value)return;for(let h=9;h<=19;h++){for(let m of [0,30]){if(h===19&&m===30)continue;const value=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');const dt=new Date(dateInput.value+'T'+value);if(dt.getTime()<=Date.now())continue;const opt=document.createElement('option');opt.value=dateInput.value+'T'+value;opt.textContent=value;timeSelect.appendChild(opt)}}}
 dateInput.addEventListener('change',fillTimes);fillTimes();
-</script></body></html>""", sv=sv, staff_rows=staff_rows, money=money, min_day=date.today().isoformat())
+</script></body></html>""", sv=sv, staff_rows=staff_rows, money=money, min_day=date.today().isoformat(), customer=account_customer)
+
+
+@app.route("/api/admin/new-bookings")
+@login_required
+def api_admin_new_bookings():
+    # Returns recent online requests; browser notifications appear while the admin panel is open.
+    c = db()
+    rows = c.execute("""SELECT a.id,a.starts_at,cu.name customer,COALESCE(s.name,'Hizmet') service
+        FROM appointments a JOIN customers cu ON cu.id=a.customer_id
+        LEFT JOIN services s ON s.id=a.service_id
+        WHERE a.public_booking=1 AND a.status='Bekliyor' AND a.created_at >= ?
+        ORDER BY a.id DESC LIMIT 30""", ((datetime.now() - __import__("datetime").timedelta(minutes=10)).isoformat(timespec="minutes"),)).fetchall()
+    return [{"id": r["id"], "starts_at": r["starts_at"], "customer": r["customer"], "service": r["service"]} for r in rows]
+
+@app.route("/api/customer/appointment-updates")
+def api_customer_appointment_updates():
+    if not session.get("customer_id"):
+        return {"error": "login_required"}, 401
+    rows = db().execute("""SELECT a.id,a.status,a.starts_at,COALESCE(s.name,'Hizmet') service
+        FROM appointments a LEFT JOIN services s ON s.id=a.service_id
+        WHERE a.customer_id=? ORDER BY a.id DESC LIMIT 30""", (session["customer_id"],)).fetchall()
+    return [{"id": r["id"], "status": r["status"], "starts_at": r["starts_at"], "service": r["service"]} for r in rows]
 
 @app.route("/health")
 def health(): return {"status":"ok"}
