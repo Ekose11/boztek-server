@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="220" viewBox="0 0 600 220">
+<rect width="600" height="220" rx="24" fill="#292126"/>
+<g fill="none" stroke="#e98d9b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M300 28c-28 0-43 23-43 45 0 15 7 25 17 34-5 20-18 29-31 39"/><path d="M300 28c28 0 43 23 43 45 0 15-7 25-17 34 5 20 18 29 31 39"/><path d="M272 63c10 10 18 12 28 12s18-2 28-12"/><path d="M275 96c9 7 17 10 25 10s16-3 25-10"/><path d="M267 143c12-8 22-11 33-11s21 3 33 11"/></g>
+<text x="300" y="177" text-anchor="middle" font-family="Georgia,serif" font-size="38" letter-spacing="5" fill="#fff7f5">NUR BEAUTY</text>
+<text x="300" y="202" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" letter-spacing="5" fill="#e98d9b">GÜZELLİK SALONU</text>
+</svg>

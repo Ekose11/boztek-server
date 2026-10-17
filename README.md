@@ -1,49 +1,38 @@
-# ATELIER — Kuaför Randevu ve Seans Takip Paneli
+# NUR BEAUTY — Kuaför ve Güzellik Salonu Yönetim Paneli
 
-Flask + SQLite ile hazırlanmış Türkçe başlangıç uygulaması. GitHub'a yüklenip Render üzerinden yayınlanacak şekilde paketlenmiştir.
+Türkçe arayüzlü Flask tabanlı randevu ve salon yönetim paneli. Görsel tema NUR BEAUTY markası için koyu mürdüm, pudra pembe ve krem renklerine uyarlanmıştır.
 
-## İçerik
-- `app.py`: Flask web uygulaması
-- `requirements.txt`: Python bağımlılıkları
-- `Procfile`: Gunicorn başlatma komutu
-- `render.yaml`: Render Blueprint yapılandırması
-- `.gitignore`: Yerel veritabanı ve gizli dosyaları Git dışında tutar
+## Özellikler
+- Yönetici girişi ve özet ekranı
+- Randevu yönetimi ve online randevu talep sayfası (`/book`)
+- Müşteri kayıtları
+- Hizmet ve paket yönetimi
+- Paket/seans takibi
+- Tahsilat kayıtları
+- Personel kayıtları
+- Gelir raporları
+- Mobil ekranlara uyumlu tasarım
 
-## GitHub'a yükleme
-1. ZIP'i bilgisayarında bir klasöre çıkar.
-2. GitHub'da yeni bir repository oluştur.
-3. Çıkarılan klasördeki dosyaları repository'ye yükle (ZIP dosyasının kendisini değil, içindeki dosyaları).
-4. Repository'nin `app.py`, `requirements.txt`, `Procfile` ve `render.yaml` dosyalarını kök dizinde tuttuğunu kontrol et.
+## Yerel çalıştırma
+Python 3.10+ önerilir.
 
-## Render'da yayınlama
-1. Render hesabına giriş yap ve **New + → Blueprint** seç.
-2. GitHub hesabını bağla, bu repository'yi seç.
-3. Render'ın `render.yaml` dosyasını okumasını bekle ve oluşturma adımlarını onayla.
-4. Dağıtım tamamlanınca Render'ın verdiği `onrender.com` adresini aç.
+```bash
+pip install -r requirements.txt
+python app.py
+```
+Ardından `http://127.0.0.1:5000` adresini açın.
 
-### Kalıcı veritabanı uyarısı
-Bu sürüm SQLite kullanır ve `render.yaml`, veritabanını `/var/data/kuafor.db` konumunda tutacak 1 GB kalıcı disk tanımlar. Render'da kalıcı diskler ücretli web servis planı gerektirebilir. Kalıcı disk bağlanmadan SQLite'ı geçici dosya sisteminde kullanırsan dağıtım/yeniden başlatma sırasında kayıtlar kaybolabilir.
+## GitHub ve Render kurulumu
+1. ZIP dosyasını çıkarın.
+2. İçindeki proje dosyalarını GitHub deposunun kök dizinine yükleyin.
+3. Render hesabında **New + → Blueprint** seçin ve GitHub deposunu bağlayın.
+4. Render, `render.yaml` dosyasındaki ayarlara göre servisi kuracaktır.
+5. İlk giriş bilgilerini aşağıdan alın ve dağıtımdan sonra değiştirin.
 
 ## İlk giriş
 - Kullanıcı adı: `admin`
 - Şifre: `Kuafor123!`
 
-Bu, herkeste aynı olan demo hesabıdır. Uygulamanın mevcut sürümünde parola değiştirme ekranı bulunmadığı için **gerçek müşteri verisi koymadan ve herkese açık satışa açmadan önce** kimlik doğrulama güvenliğini tamamla; en azından varsayılan hesabı güvenli şekilde değiştiren bir mekanizma ekle. `SECRET_KEY`, Render yapılandırmasında otomatik oluşturulur; kaynak koda gerçek gizli anahtar koyma.
+**Güvenlik:** Bu proje başlangıç/demo paketidir. Gerçek müşteri verileriyle kullanmadan önce varsayılan şifreyi değiştirin, parola değiştirme ekranı ve CSRF koruması ekleyin, `SECRET_KEY` değerini güvenli bir ortam değişkeni olarak ayarlayın ve veri yedekleme/kalıcılığını doğrulayın. SQLite ve tek yönetici hesabı mevcut haliyle yüksek trafikli veya çok salonlu ticari kullanım için yeterli değildir. Render kalıcı disk planı ücretli olabilir.
 
-## Üretim öncesi eksikler
-Bu paket, Render'a dağıtılabilir bir başlangıç/demonstrasyon sürümüdür; güvenlik incelemesi yapılmış ticari ürün olarak değerlendirilmemelidir. Gerçek müşteriler için yayınlamadan önce en azından şunları tamamla:
-- Güvenli parola değiştirme ve parola sıfırlama
-- CSRF koruması ve oturum güvenliği ayarları
-- Her salonun yalnızca kendi verilerini görebileceği çok işletmeli (multi-tenant) veri izolasyonu
-- Randevu saat çakışması kontrolü ve eşzamanlı seans/ödeme işlemlerinin doğrulanması
-- Otomatik yedekleme ve geri yükleme testi
-- Gizlilik/KVKK süreçleri, erişim kayıtları ve üretim testleri
-
-## Yerel çalıştırma (Windows)
-```bat
-py -m venv .venv
-.venv\Scripts\activate
-py -m pip install -r requirements.txt
-py app.py
-```
-Tarayıcıda `http://127.0.0.1:5000` adresini aç.
+`logo.svg`, NUR BEAUTY için düzenlenebilir vektör logo taslağıdır.
